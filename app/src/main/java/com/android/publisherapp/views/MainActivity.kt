@@ -50,10 +50,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
             }else if(binding.etPassword.text.trim().isNullOrEmpty() and binding.etEmail.text.trim().isNullOrEmpty()){
-                showInputMessages(true,"password")
+                showInputMessages(true,"email")
                 binding.etPassword.requestFocus()
                 val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.showSoftInput(binding.etPassword, InputMethodManager.SHOW_IMPLICIT)
+                imm.showSoftInput(binding.etEmail, InputMethodManager.SHOW_IMPLICIT)
             }else if(binding.etPassword.text.trim().isNullOrEmpty()){
                 showInputMessages(false,"password")
 
@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
             putExtra("email",email)
         }
         home.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivityForResult(home, 0)
 
         val preferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         val editor = preferences.edit()

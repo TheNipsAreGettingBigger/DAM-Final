@@ -19,4 +19,15 @@
                 android:title="Usuarios" />
         </menu>
     </item>
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Setting" >
+        <menu >
+            <item
+                android:id="@+id/cerrar"
+                android:icon="@drawable/ic_baseline_exit_to_app_24"
+                android:title="Cerrar Sesion" />
+        </menu>
+    </item>
 </menu>

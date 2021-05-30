@@ -1,5 +1,6 @@
 package com.android.publisherapp.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -11,7 +12,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.android.publisherapp.R
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class InicioActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelectedListener{
     private val db = FirebaseFirestore.getInstance()
@@ -67,6 +70,17 @@ class InicioActivity : AppCompatActivity() , NavigationView.OnNavigationItemSele
                 fragmentTransaction = fragmentManager?.beginTransaction()
                 fragmentTransaction?.replace(R.id.frgPrincipal, ProductosFragment())
                 fragmentTransaction?.commit()
+            }
+            R.id.cerrar -> {
+                FirebaseAuth.getInstance().signOut()
+                val preferences = getSharedPreferences("user", 0)
+                val editor = preferences.edit()
+                editor.putString("email","").apply()
+                preferences.edit().clear().apply()
+                val home = Intent(this, MainActivity::class.java)
+                home.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(home)
+                finish()
             }
 
         }
