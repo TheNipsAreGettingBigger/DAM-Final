@@ -1,4 +1,4 @@
-package com.android.publisherapp
+package com.android.publisherapp.views
 
 import android.app.AlertDialog
 import android.app.ProgressDialog

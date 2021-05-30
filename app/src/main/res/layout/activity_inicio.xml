@@ -5,7 +5,7 @@
     android:id="@+id/frmInicio"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InicioActivity">
+    tools:context=".views.InicioActivity">
 
     <include
         layout="@layout/toolbar"

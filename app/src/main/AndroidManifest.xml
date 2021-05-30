@@ -9,11 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PublisherApp">
-        <activity android:name=".InicioActivity"
+        <activity android:name=".views.InicioActivity"
             android:theme="@style/Theme.PublisherApp.NoActionBar"
             ></activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".views.SplashActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".views.MainActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar"></activity>
     </application>
 
