@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
-class InicioActivity : AppCompatActivity() {
+class InicioActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelectedListener{
     private val db = FirebaseFirestore.getInstance()
     var drawerLayout: DrawerLayout? = null
     var actionBarDrawerToogle:ActionBarDrawerToggle? = null
@@ -43,36 +43,36 @@ class InicioActivity : AppCompatActivity() {
         actionBarDrawerToogle?.setDrawerIndicatorEnabled(true)
         actionBarDrawerToogle?.syncState()
 
-//        fragmentManager = supportFragmentManager
-//        fragmentTransaction = fragmentManager?.beginTransaction()
-//        fragmentTransaction?.add(R.id.frgPrincipal, FrangmentInicico())
-//        fragmentTransaction?.commit()
-//        navigationView?.setNavigationItemSelectedListener(this)
+        fragmentManager = supportFragmentManager
+        fragmentTransaction = fragmentManager?.beginTransaction()
+        fragmentTransaction?.add(R.id.frgPrincipal, InicioFragment())
+        fragmentTransaction?.commit()
+        navigationView?.setNavigationItemSelectedListener(this)
     }
 
-//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        when(item.itemId){
-//            R.id.inicio ->{
-//                fragmentManager = supportFragmentManager
-//                fragmentTransaction = fragmentManager?.beginTransaction()
-//                fragmentTransaction?.replace(R.id.frgPrincipal, FrangmentInicico())
-//                fragmentTransaction?.commit()
-//            }
-//            R.id.clientes ->{
-//                fragmentManager = supportFragmentManager
-//                fragmentTransaction = fragmentManager?.beginTransaction()
-//                fragmentTransaction?.replace(R.id.frgPrincipal, FragmentClientes())
-//                fragmentTransaction?.commit()
-//            }
-//            R.id.servicios -> {
-//                fragmentManager = supportFragmentManager
-//                fragmentTransaction = fragmentManager?.beginTransaction()
-//                fragmentTransaction?.replace(R.id.frgPrincipal, FragmentServicios())
-//                fragmentTransaction?.commit()
-//            }
-//
-//        }
-//        drawerLayout?.closeDrawer(GravityCompat.START)
-//        return true
-//    }
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.inicio ->{
+                fragmentManager = supportFragmentManager
+                fragmentTransaction = fragmentManager?.beginTransaction()
+                fragmentTransaction?.replace(R.id.frgPrincipal, InicioFragment())
+                fragmentTransaction?.commit()
+            }
+            R.id.usuarios ->{
+                fragmentManager = supportFragmentManager
+                fragmentTransaction = fragmentManager?.beginTransaction()
+                fragmentTransaction?.replace(R.id.frgPrincipal, UsuariosFragment())
+                fragmentTransaction?.commit()
+            }
+            R.id.productos -> {
+                fragmentManager = supportFragmentManager
+                fragmentTransaction = fragmentManager?.beginTransaction()
+                fragmentTransaction?.replace(R.id.frgPrincipal, ProductosFragment())
+                fragmentTransaction?.commit()
+            }
+
+        }
+        drawerLayout?.closeDrawer(GravityCompat.START)
+        return true
+    }
 }
