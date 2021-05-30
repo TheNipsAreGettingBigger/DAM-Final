@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="General" >
+        <menu >
+            <item
+                android:id="@+id/inicio"
+                android:icon="@drawable/ic_baseline_home_24"
+                android:title="Inicio" />
+            <item
+                android:id="@+id/productos"
+                android:icon="@drawable/ic_baseline_electrical_services_24"
+                android:title="Productos" />
+            <item
+                android:id="@+id/usuarios"
+                android:icon="@drawable/ic_baseline_people_alt_24"
+                android:title="Usuarios" />
+        </menu>
+    </item>
+</menu>
