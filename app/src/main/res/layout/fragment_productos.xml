@@ -7,22 +7,23 @@
     tools:context=".views.ProductosFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
         android:text="Productos"
-        android:textSize="24sp"
+        android:textSize="48sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/rv_lista_producto"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_lista_producto"
         android:layout_width="0dp"
-        android:layout_height="508dp"
+        android:layout_height="515dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
