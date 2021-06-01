@@ -21,6 +21,8 @@ class ProductoAdapter(options: FirestoreRecyclerOptions<Producto>) :
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int, model: Producto) {
         holder.tv_nombre?.setText(model.nombre)
         holder.tv_stock?.setText(model.stock)
+        holder.tv_tipo?.setText(model.tipo)
+        holder.tv_precio?.setText("${model.precio} soles")
         if(!model.foto.isNullOrEmpty()){
             Glide.with(holder.iv_producto?.context!!).load(model.foto).into(holder.iv_producto!!)
         }
@@ -36,12 +38,16 @@ class ProductoAdapter(options: FirestoreRecyclerOptions<Producto>) :
         var tv_nombre : TextView? = null
         var tv_stock : TextView? = null
         var iv_producto : ImageView ?= null
+        var tv_precio : TextView?=null
+        var tv_tipo: TextView ?= null
 
         constructor(itemView:View) :super(itemView){
 
             tv_nombre = itemView.findViewById(R.id.tv_nombre)
             tv_stock = itemView.findViewById(R.id.tv_stock)
             iv_producto = itemView.findViewById(R.id.iv_producto)
+            tv_tipo = itemView.findViewById(R.id.tv_tipo)
+            tv_precio = itemView.findViewById(R.id.tv_precio)
         }
     }
 

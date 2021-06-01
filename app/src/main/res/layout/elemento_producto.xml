@@ -30,7 +30,7 @@
                 android:id="@+id/textView"
                 android:layout_width="59dp"
                 android:layout_height="19dp"
-                android:layout_marginStart="52dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="36dp"
                 android:text="Nombre"
                 app:layout_constraintStart_toEndOf="@+id/iv_producto"
@@ -40,8 +40,8 @@
                 android:id="@+id/textView2"
                 android:layout_width="50dp"
                 android:layout_height="27dp"
-                android:layout_marginStart="52dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="8dp"
                 android:text="Stock"
                 app:layout_constraintStart_toEndOf="@+id/iv_producto"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -50,8 +50,8 @@
                 android:id="@+id/tv_nombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="44dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="36dp"
                 android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/textView"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -60,11 +60,43 @@
                 android:id="@+id/tv_stock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/textView2"
                 app:layout_constraintTop_toBottomOf="@+id/tv_nombre" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="8dp"
+                android:text="Precio"
+                app:layout_constraintStart_toEndOf="@+id/iv_producto"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/tv_precio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="16dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView3"
+                app:layout_constraintTop_toBottomOf="@+id/tv_stock"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/tv_tipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="36dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/tv_nombre"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
