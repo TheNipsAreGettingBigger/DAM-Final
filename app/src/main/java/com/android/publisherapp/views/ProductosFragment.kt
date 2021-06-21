@@ -1,22 +1,35 @@
 package com.android.publisherapp.views
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.OpenableColumns
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.publisherapp.R
 import com.android.publisherapp.adapters.ProductoAdapter
 import com.android.publisherapp.models.Producto
+import com.android.publisherapp.utils.RealPathUtil
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.io.File
+import javax.annotation.Nullable
+
 
 class ProductosFragment : Fragment() {
 
@@ -30,7 +43,22 @@ class ProductosFragment : Fragment() {
     var txtPrecioProducto : EditText?= null
     var btnAdd : Button?=null
     var btnCancelar : Button?=null
+    var ivAddImagen :ImageView?=null
+    var lblAddImage:TextView?=null
+    val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if(uri !=null){
+            // mostrar imagen y guardar la url
+            ivAddImagen?.setImageURI(uri)
+            val filename =  context?.let { RealPathUtil.getRealPath(it, uri) } ?: ""
 
+            val fullName = filename.substringAfterLast("/")
+            val fileName = fullName.substringBeforeLast(".")
+            val extension = fullName.substringAfterLast(".")
+            lblAddImage?.textSize = 15F
+            lblAddImage?.gravity = TextView.TEXT_ALIGNMENT_TEXT_START
+            lblAddImage?.text = "${fileName}.${extension}"
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +74,7 @@ class ProductosFragment : Fragment() {
 
         val botonagregarProducto:FloatingActionButton = view.findViewById(R.id.btnAddProducto)
 
+
         botonagregarProducto.setOnClickListener {
             dialogBuilder = AlertDialog.Builder(context)
             var viewProducto:View = layoutInflater.inflate(R.layout.productos_add,null)
@@ -55,10 +84,16 @@ class ProductosFragment : Fragment() {
             txtPrecioProducto = viewProducto.findViewById(R.id.et_AddPrecioProducto)
             btnAdd =viewProducto.findViewById(R.id.btnAgregar)
             btnCancelar = viewProducto.findViewById(R.id.btnCancelar)
+            ivAddImagen = viewProducto.findViewById(R.id.iv_AddProducto)
+            lblAddImage = viewProducto.findViewById(R.id.lbl_imagen)
 
             dialogBuilder?.setView(viewProducto)
             dialog = dialogBuilder?.create()
             dialog?.show()
+
+            ivAddImagen?.setOnClickListener {
+                getContent.launch("image/*")
+            }
 
             btnAdd?.setOnClickListener {
 
@@ -118,4 +153,6 @@ class ProductosFragment : Fragment() {
         val dialog3:AlertDialog = builder2.create()
         dialog3.show()
     }
+
+
 }

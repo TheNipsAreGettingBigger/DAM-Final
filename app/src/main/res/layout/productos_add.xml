@@ -25,7 +25,7 @@
         android:id="@+id/et_AddtipoProducto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Tipo del Producto"
         android:inputType="textPersonName"
@@ -39,7 +39,7 @@
         android:id="@+id/et_AddStockProducto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Stock del Producto"
         android:inputType="number"
@@ -53,13 +53,13 @@
         android:id="@+id/et_AddPrecioProducto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Precio del Producto"
         android:inputType="numberDecimal"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@+id/et_AddStockProducto"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/et_AddStockProducto"
         app:layout_constraintTop_toBottomOf="@+id/et_AddStockProducto" />
 
@@ -67,8 +67,8 @@
         android:id="@+id/btnCancelar"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="#8A3D3D"
         android:text="cancelar"
@@ -80,12 +80,35 @@
         android:id="@+id/btnAgregar"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginTop="100dp"
 
+        android:layout_marginEnd="40dp"
         android:layout_marginBottom="20dp"
         android:text="Agregar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_AddPrecioProducto" />
+
+    <ImageView
+        android:id="@+id/iv_AddProducto"
+        android:layout_width="70dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_AddPrecioProducto"
+        app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
+
+    <TextView
+        android:id="@+id/lbl_imagen"
+        android:layout_width="196dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Agregar Imagen"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/iv_AddProducto"
         app:layout_constraintTop_toBottomOf="@+id/et_AddPrecioProducto" />
 </androidx.constraintlayout.widget.ConstraintLayout>
