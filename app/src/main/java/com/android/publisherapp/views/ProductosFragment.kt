@@ -31,8 +31,13 @@ class ProductosFragment : Fragment() {
 
     var recyclerProductos : RecyclerView? = null
     var producoAdapter:ProductoAdapter?=null
+
     var dialogBuilder:AlertDialog.Builder? = null
     var dialog:AlertDialog? = null
+
+    var progressDialogBuilder : AlertDialog.Builder? = null
+    var progressDialog:AlertDialog? = null
+
     var txtNombreProducto : EditText?= null
     var txtTipoProducto : EditText?= null
     var txtStockProducto : EditText?= null
@@ -93,6 +98,7 @@ class ProductosFragment : Fragment() {
 
             dialogBuilder?.setView(viewProducto)
             dialog = dialogBuilder?.create()
+            dialog?.setCancelable(false)
             dialog?.show()
 
             ivAddImagen?.setOnClickListener {
@@ -100,6 +106,8 @@ class ProductosFragment : Fragment() {
             }
 
             btnAdd?.setOnClickListener {
+                progressDialogBuilder = AlertDialog.Builder(context)
+
 
                 nom = txtNombreProducto?.text.toString().trim()
                 tipo = txtTipoProducto?.text.toString().trim()
@@ -109,6 +117,12 @@ class ProductosFragment : Fragment() {
                 if(nom.isNullOrEmpty() || tipo.isNullOrEmpty() || precio.isNullOrEmpty() || stock.isNullOrEmpty()){
                     showAlert("ALERTA","Los campos son requeridos, no deben estar vacios")
                 }else{
+                    dialog?.dismiss()
+                    var loading:View = layoutInflater.inflate(R.layout.loding_insert,null)
+                    progressDialogBuilder?.setView(loading)
+                    progressDialog = progressDialogBuilder?.create()
+                    progressDialog?.setCancelable(false)
+                    progressDialog?.show()
                     upload()
                 }
 
@@ -160,10 +174,12 @@ class ProductosFragment : Fragment() {
             "foto" to urlImage
         ))
             .addOnSuccessListener {
-                dialog?.dismiss()
+                progressDialog?.dismiss()
+
                 showAlert("EXITO","Se creo el producto correctamente")
             }
             .addOnFailureListener {
+                progressDialog?.dismiss()
                 showAlert("ERROR","Se produjo un error al crear un nuevo producto intentelo denueo")
             }
     }
