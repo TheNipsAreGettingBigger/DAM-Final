@@ -1,13 +1,8 @@
 package com.android.publisherapp.views
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +22,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import java.io.File
-import javax.annotation.Nullable
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.util.*
 
 
 class ProductosFragment : Fragment() {
@@ -45,18 +41,26 @@ class ProductosFragment : Fragment() {
     var btnCancelar : Button?=null
     var ivAddImagen :ImageView?=null
     var lblAddImage:TextView?=null
+    var imageUri :Uri?=null
+    var nameImage:String= ""
+    var urlImage:String = ""
+    var nom:String = ""
+    var tipo:String = ""
+    var precio:String = ""
+    var stock :String= ""
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if(uri !=null){
             // mostrar imagen y guardar la url
             ivAddImagen?.setImageURI(uri)
             val filename =  context?.let { RealPathUtil.getRealPath(it, uri) } ?: ""
-
+            imageUri = uri
             val fullName = filename.substringAfterLast("/")
             val fileName = fullName.substringBeforeLast(".")
             val extension = fullName.substringAfterLast(".")
             lblAddImage?.textSize = 15F
             lblAddImage?.gravity = TextView.TEXT_ALIGNMENT_TEXT_START
-            lblAddImage?.text = "${fileName}.${extension}"
+            nameImage = "${fileName}.${extension}"
+            lblAddImage?.text = nameImage
         }
     }
 
@@ -97,27 +101,15 @@ class ProductosFragment : Fragment() {
 
             btnAdd?.setOnClickListener {
 
-                val nom:String = txtNombreProducto?.text.toString().trim()
-                val tipo:String = txtTipoProducto?.text.toString().trim()
-                val precio:String = txtStockProducto?.text.toString().trim()
-                val stock :String= txtPrecioProducto?.text.toString().trim()
+                nom = txtNombreProducto?.text.toString().trim()
+                tipo = txtTipoProducto?.text.toString().trim()
+                precio = txtStockProducto?.text.toString().trim()
+                stock = txtPrecioProducto?.text.toString().trim()
 
                 if(nom.isNullOrEmpty() || tipo.isNullOrEmpty() || precio.isNullOrEmpty() || stock.isNullOrEmpty()){
                     showAlert("ALERTA","Los campos son requeridos, no deben estar vacios")
                 }else{
-                    FirebaseFirestore.getInstance().collection("productos").add(hashMapOf(
-                        "nombre" to nom,
-                        "tipo" to tipo,
-                        "precio" to precio,
-                        "stock" to stock
-                    ))
-                        .addOnSuccessListener {
-                            dialog?.dismiss()
-                            showAlert("EXITO","Se creo el producto correctamente")
-                        }
-                        .addOnFailureListener {
-                            showAlert("ERROR","Se produjo un error al crear un nuevo producto intentelo denueo")
-                        }
+                    upload()
                 }
 
             }
@@ -140,7 +132,41 @@ class ProductosFragment : Fragment() {
         super.onStart()
         producoAdapter?.startListening()
     }
-
+    fun upload() {
+        if(imageUri!=null){
+            var ref :StorageReference = FirebaseStorage.getInstance().reference.child(UUID.randomUUID().toString()+nameImage)
+            ref.putFile(imageUri!!).continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                ref.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    urlImage = downloadUri.toString()
+                    insertProduct()
+                }
+            }
+        }
+    }
+    fun insertProduct(){
+        FirebaseFirestore.getInstance().collection("productos").add(hashMapOf(
+            "nombre" to nom,
+            "tipo" to tipo,
+            "precio" to precio,
+            "stock" to stock,
+            "foto" to urlImage
+        ))
+            .addOnSuccessListener {
+                dialog?.dismiss()
+                showAlert("EXITO","Se creo el producto correctamente")
+            }
+            .addOnFailureListener {
+                showAlert("ERROR","Se produjo un error al crear un nuevo producto intentelo denueo")
+            }
+    }
     override fun onStop() {
         super.onStop()
         producoAdapter?.stopListening()
