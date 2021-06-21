@@ -103,12 +103,12 @@
         android:id="@+id/lbl_imagen"
         android:layout_width="196dp"
         android:layout_height="67dp"
-        android:layout_marginStart="52dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
         android:gravity="center"
         android:text="Agregar Imagen"
         android:textSize="20sp"
         android:textStyle="italic"
-        app:layout_constraintStart_toEndOf="@+id/iv_AddProducto"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_AddPrecioProducto" />
 </androidx.constraintlayout.widget.ConstraintLayout>

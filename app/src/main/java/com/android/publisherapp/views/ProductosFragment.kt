@@ -118,6 +118,7 @@ class ProductosFragment : Fragment() {
                     showAlert("ALERTA","Los campos son requeridos, no deben estar vacios")
                 }else{
                     dialog?.dismiss()
+                    lblAddImage?.gravity = TextView.TEXT_ALIGNMENT_CENTER
                     var loading:View = layoutInflater.inflate(R.layout.loding_insert,null)
                     progressDialogBuilder?.setView(loading)
                     progressDialog = progressDialogBuilder?.create()
