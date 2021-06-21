@@ -7,7 +7,9 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
+    buildFeatures {
+        viewBinding = true
+    }
     defaultConfig {
         applicationId "com.android.publisherapp"
         minSdkVersion 23
@@ -31,9 +33,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-  buildFeatures {
-    viewBinding true
-  }
+
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
