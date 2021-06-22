@@ -13,15 +13,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.android.publisherapp.FragmentProductoDetalle
 import com.android.publisherapp.R
 import com.android.publisherapp.models.Producto
 import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ProductoAdapter(options: FirestoreRecyclerOptions<Producto>,context:Context) :
     FirestoreRecyclerAdapter<Producto, ProductoAdapter.ProductViewHolder>(options) {
-    private val fragmentTransaction: FragmentTransaction? = null
     var context_ = context
 //    https://www.youtube.com/watch?v=sZ8D1-hNeWo
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int, model: Producto) {
@@ -37,7 +38,23 @@ class ProductoAdapter(options: FirestoreRecyclerOptions<Producto>,context:Contex
         holder.fila?.setOnClickListener{
             Log.i("asd", "MyClass.getView() — get item number $model")
             Toast.makeText(context_, "${holder.fila?.tag.toString()} aasdas", Toast.LENGTH_SHORT).show()
-//            val fragmentManager:FragmentManager = (parent as AppCompatActivity).getSupportFragmentManager()
+            FirebaseFirestore.getInstance().collection("productos").document(holder.fila?.tag.toString()).get()
+                .addOnSuccessListener {
+                    var producto:Producto = Producto(
+                        it.get("uid") as String,
+                        it.get("nombre") as String,
+                        it.get("tipo") as String,
+                        it.get("foto") as String,
+                        it.get("stock") as String,
+                        it.get("precio") as String)
+                    val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
+                    val fragmentTransaction:FragmentTransaction = fragmentManager.beginTransaction()
+                    val clienteDetalle:FragmentProductoDetalle = FragmentProductoDetalle()
+                    clienteDetalle.producto = producto
+                    fragmentTransaction.replace(R.id.frgPrincipal,clienteDetalle)
+                    fragmentTransaction.commit()
+
+                }
         }
     }
 

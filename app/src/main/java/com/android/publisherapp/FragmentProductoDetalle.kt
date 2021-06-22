@@ -9,7 +9,7 @@ import com.android.publisherapp.models.Producto
 
 class FragmentProductoDetalle : Fragment() {
 
-    val  producto:Producto?=null
+    var producto:Producto?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
