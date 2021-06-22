@@ -22,6 +22,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.util.*
@@ -138,7 +139,7 @@ class ProductosFragment : Fragment() {
         var query:Query = FirebaseFirestore.getInstance().collection("productos")
 
         var f_options :FirestoreRecyclerOptions<Producto> = FirestoreRecyclerOptions.Builder<Producto>().setQuery(query,Producto::class.java).build()
-        producoAdapter = ProductoAdapter(f_options)
+        producoAdapter = ProductoAdapter(f_options,requireContext())
         producoAdapter?.notifyDataSetChanged()
         recyclerProductos?.adapter = producoAdapter
     }
@@ -175,9 +176,18 @@ class ProductosFragment : Fragment() {
             "foto" to urlImage
         ))
             .addOnSuccessListener {
-                progressDialog?.dismiss()
 
-                showAlert("EXITO","Se creo el producto correctamente")
+                val data = hashMapOf("uid" to it.id)
+                FirebaseFirestore.getInstance().collection("productos").document(it.id).set(data, SetOptions.merge())
+                .addOnSuccessListener {
+                    progressDialog?.dismiss()
+                    showAlert("EXITO","Se creo el producto correctamente")
+                }
+                .addOnFailureListener{
+                    progressDialog?.dismiss()
+                    showAlert("ERROR","Se produjo un error al crear un nuevo producto intentelo denueo")
+                }
+
             }
             .addOnFailureListener {
                 progressDialog?.dismiss()
