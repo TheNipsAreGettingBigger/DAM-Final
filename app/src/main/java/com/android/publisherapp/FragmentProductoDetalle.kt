@@ -1,6 +1,7 @@
 package com.android.publisherapp
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,15 +9,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.android.publisherapp.models.Producto
+import com.android.publisherapp.utils.RealPathUtil
 import com.android.publisherapp.views.ProductosFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.util.*
+
 //https://github.com/Androchunk/CustomIconSpinner/blob/master/app/src/main/java/com/androchunk/customiconspinner/CustomAdapter.java
 enum class TIPO_DE_ACCION(val tipo:Int){
     ACTUALIZAR(1),
@@ -34,6 +42,26 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
     var btnCancelar:Button?=null
     var btnActualizar:Button?=null
     var filename:TextView?=null
+    var imageUri :Uri?=null
+    var nameImage:String= ""
+    val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if(uri !=null){
+            // mostrar imagen y guardar la url
+            img?.setImageURI(uri)
+            val filenameCompleto =  context?.let { RealPathUtil.getRealPath(it, uri) } ?: ""
+            if(filenameCompleto.trim().isNotEmpty()){
+                imageUri = uri
+                val fullName = filenameCompleto.substringAfterLast("/")
+                val fileName = fullName.substringBeforeLast(".")
+                val extension = fullName.substringAfterLast(".")
+                filename?.textSize = 15F
+                filename?.gravity = TextView.TEXT_ALIGNMENT_TEXT_START
+                nameImage = "${fileName}.${extension}"
+                filename?.text = nameImage
+            }
+
+        }
+    }
 
 //    https://luismasdev.com/mostrar-mensajes-al-usuario-con-toast-fragment-activity-adapter/
     override fun onCreateView(
@@ -69,7 +97,9 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         if(!producto?.filename.isNullOrEmpty()){
             filename?.setText(producto?.filename)
         }
-
+        img?.setOnClickListener {
+            getContent.launch("image/*")
+        }
         btnActualizar?.setOnClickListener {
             Log.i("precio",producto?.precio+""+producto)
 
@@ -86,6 +116,54 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         }
         btnEliminar?.setOnClickListener {
             createDialog("¿Estas seguro que deseas eliminar?",TIPO_DE_ACCION.ELIMINAR)
+        }
+    }
+    private fun showAlert(title:String,message:String){
+        var builder2 = AlertDialog.Builder(context_)
+        builder2.setTitle(title)
+        builder2.setMessage(message)
+        builder2.setPositiveButton("Aceptar",null)
+        val dialog3: AlertDialog = builder2.create()
+        dialog3.show()
+    }
+    fun updateWithoutImages(alertDialog4:AlertDialog){
+        val data = hashMapOf(
+            "uid" to producto?.uid.toString(),
+            "foto" to producto?.foto.toString(),
+            "filename" to producto?.filename.toString(),
+            "nombre" to et_producto?.text.toString(),
+            "tipo" to et_tipo?.text.toString(),
+            "precio" to et_precio?.text.toString(),
+            "stock" to et_stock?.text.toString(),
+        )
+
+        FirebaseFirestore.getInstance().collection("productos").document(producto?.uid?:"").set(data, SetOptions.merge())
+            .addOnSuccessListener {
+                alertDialog4.dismiss()
+                showAlert("EXITO","Se creo el producto correctamente")
+
+            }
+            .addOnFailureListener{
+                alertDialog4.dismiss()
+                showAlert("ERROR","Se produjo un error al crear un nuevo producto intentelo denueo")
+            }
+    }
+    fun updateWithImages(alertDialog4:AlertDialog){
+        var ref : StorageReference = FirebaseStorage.getInstance().reference.child(UUID.randomUUID().toString()+nameImage)
+        ref.putFile(imageUri!!).continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            ref.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloadUri = task.result
+                producto?.foto = downloadUri.toString()
+                producto?.filename = nameImage
+                updateWithoutImages(alertDialog4)
+            }
         }
     }
 
@@ -110,9 +188,29 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         btnAceptar.setOnClickListener {
             alertDialog.dismiss()
 
-
+            var ad : AlertDialog ?= null
             if(tipo == TIPO_DE_ACCION.ACTUALIZAR){
                 Log.i("actu","actualizar"+producto?.uid)
+                if(et_producto?.text.isNullOrEmpty() || et_tipo?.text.isNullOrEmpty() || et_precio?.text.isNullOrEmpty() || et_stock?.text.isNullOrEmpty()){
+                    showAlert("ALERTA","Los campos son requeridos, no deben estar vacios")
+                }else{
+                    val alertDialog4 : AlertDialog
+                    val builder4 = AlertDialog.Builder(context_)
+
+                    val view4 : View = LayoutInflater.from(context_).inflate(R.layout.loding_insert,null)
+                    val label4 :TextView = view4.findViewById(R.id.tv_titulo_spinner)
+                    label4.setText("Actualizando el producto en la base de datos")
+                    builder4.setView(view4)
+                    alertDialog4 = builder4.create()
+                    alertDialog4.setCancelable(false)
+                    alertDialog4.show()
+                    if(imageUri!=null && nameImage.trim().isNotEmpty()){
+                        updateWithImages(alertDialog4)
+                    }else{
+                        updateWithoutImages(alertDialog4)
+                    }
+                }
+
             }else{
                 var uid:String = producto?.uid ?:""
                 Log.i("eli","eliminar"+producto?.uid)
