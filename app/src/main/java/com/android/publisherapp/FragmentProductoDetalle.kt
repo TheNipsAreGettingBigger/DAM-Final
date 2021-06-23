@@ -140,12 +140,12 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         FirebaseFirestore.getInstance().collection("productos").document(producto?.uid?:"").set(data, SetOptions.merge())
             .addOnSuccessListener {
                 alertDialog4.dismiss()
-                showAlert("EXITO","Se creo el producto correctamente")
+                showAlert("EXITO","Se actualizo el producto correctamente")
 
             }
             .addOnFailureListener{
                 alertDialog4.dismiss()
-                showAlert("ERROR","Se produjo un error al crear un nuevo producto intentelo denueo")
+                showAlert("ERROR","Se produjo un error al actualizar el producto intentelo denueo")
             }
     }
     fun updateWithImages(alertDialog4:AlertDialog){
