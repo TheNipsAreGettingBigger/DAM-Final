@@ -16,7 +16,12 @@ import com.android.publisherapp.models.Producto
 import com.android.publisherapp.views.ProductosFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
-
+import com.google.firebase.firestore.FirebaseFirestore
+//https://github.com/Androchunk/CustomIconSpinner/blob/master/app/src/main/java/com/androchunk/customiconspinner/CustomAdapter.java
+enum class TIPO_DE_ACCION(val tipo:Int){
+    ACTUALIZAR(1),
+    ELIMINAR(2)
+}
 class FragmentProductoDetalle(context:Context) : Fragment() {
     var context_ = context
     var producto: Producto? =null
@@ -29,6 +34,7 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
     var btnCancelar:Button?=null
     var btnActualizar:Button?=null
     var filename:TextView?=null
+
 //    https://luismasdev.com/mostrar-mensajes-al-usuario-con-toast-fragment-activity-adapter/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +75,7 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
 
             Toast.makeText(activity,et_producto?.text,Toast.LENGTH_LONG).show()
             Log.i("assd","asdasdasd"+et_producto?.text+producto?.nombre)
-            createDialog("¿Estas seguro que deseas actualizar?")
+            createDialog("¿Estas seguro que deseas actualizar?",TIPO_DE_ACCION.ACTUALIZAR)
         }
         btnCancelar?.setOnClickListener {
             val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
@@ -79,11 +85,11 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
             fragmentTransaction.commit()
         }
         btnEliminar?.setOnClickListener {
-            createDialog("¿Estas seguro que deseas eliminar?")
+            createDialog("¿Estas seguro que deseas eliminar?",TIPO_DE_ACCION.ELIMINAR)
         }
     }
 
-    fun createDialog(message:String){
+    fun createDialog(message:String,tipo:TIPO_DE_ACCION){
         val alertDialog :AlertDialog
         val builder = AlertDialog.Builder(requireContext())
         val view : View = layoutInflater.inflate(R.layout.mensaje_sistema,null)
@@ -104,13 +110,33 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         btnAceptar.setOnClickListener {
             alertDialog.dismiss()
 
-            // hacer accion
 
+            if(tipo == TIPO_DE_ACCION.ACTUALIZAR){
+                Log.i("actu","actualizar"+producto?.uid)
+            }else{
+                var uid:String = producto?.uid ?:""
+                Log.i("eli","eliminar"+producto?.uid)
+                val alertDialog : AlertDialog
+                val builder = AlertDialog.Builder(context_)
+
+                val view : View = LayoutInflater.from(context_).inflate(R.layout.loding_insert,null)
+                val label :TextView = view.findViewById(R.id.tv_titulo_spinner)
+                label.setText("Eliminando el producto en la Base de Datos")
+                builder.setView(view)
+                alertDialog = builder.create()
+                alertDialog.setCancelable(false)
+                alertDialog.show()
+                FirebaseFirestore.getInstance().collection("productos").document(uid).delete()
+                    .addOnCompleteListener{
+                    alertDialog.dismiss()
+                    }
+            }
             val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
             val fragmentTransaction:FragmentTransaction = fragmentManager.beginTransaction()
             val productosFragment = ProductosFragment()
             fragmentTransaction.replace(R.id.frgPrincipal,productosFragment)
             fragmentTransaction.commit()
+
 
         }
     }
