@@ -8,15 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.android.publisherapp.models.Producto
-import com.android.publisherapp.views.InicioFragment
 import com.android.publisherapp.views.ProductosFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fragment_producto_detalle.*
 
 class FragmentProductoDetalle(context:Context) : Fragment() {
     var context_ = context
@@ -50,7 +49,6 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         btnEliminar = view.findViewById(R.id.btnEliminarActualizar)
         img = view.findViewById(R.id.iv_actualizarProducto)
         filename = view.findViewById(R.id.lbl_filename)
-
         et_producto?.setText( producto?.nombre)
         et_precio?.setText( producto?.precio)
         et_stock?.setText(producto?.stock)
@@ -67,9 +65,11 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
         }
 
         btnActualizar?.setOnClickListener {
+            Log.i("precio",producto?.precio+""+producto)
 
             Toast.makeText(activity,et_producto?.text,Toast.LENGTH_LONG).show()
             Log.i("assd","asdasdasd"+et_producto?.text+producto?.nombre)
+            createDialog("¿Estas seguro que deseas actualizar?")
         }
         btnCancelar?.setOnClickListener {
             val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
@@ -78,7 +78,40 @@ class FragmentProductoDetalle(context:Context) : Fragment() {
             fragmentTransaction.replace(R.id.frgPrincipal,productosFragment)
             fragmentTransaction.commit()
         }
-//        et_producto?.text
+        btnEliminar?.setOnClickListener {
+            createDialog("¿Estas seguro que deseas eliminar?")
+        }
+    }
 
+    fun createDialog(message:String){
+        val alertDialog :AlertDialog
+        val builder = AlertDialog.Builder(requireContext())
+        val view : View = layoutInflater.inflate(R.layout.mensaje_sistema,null)
+
+        val btnAceptar :Button = view.findViewById(R.id.btnaceptarconsecuencias)
+        val btnCancelaraccion:Button = view.findViewById(R.id.btncancelaraccion)
+        val label :TextView = view.findViewById(R.id.tv_message)
+        label.setText(message)
+
+        builder.setView(view)
+        alertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+
+        btnCancelaraccion.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        btnAceptar.setOnClickListener {
+            alertDialog.dismiss()
+
+            // hacer accion
+
+            val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
+            val fragmentTransaction:FragmentTransaction = fragmentManager.beginTransaction()
+            val productosFragment = ProductosFragment()
+            fragmentTransaction.replace(R.id.frgPrincipal,productosFragment)
+            fragmentTransaction.commit()
+
+        }
     }
 }

@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
@@ -39,22 +41,34 @@ class ProductoAdapter(options: FirestoreRecyclerOptions<Producto>,context:Contex
         }
 
         holder.fila?.setOnClickListener{
+            val alertDialog : AlertDialog
+            val builder = AlertDialog.Builder(context_)
+
+            val view : View = LayoutInflater.from(context_).inflate(R.layout.loding_insert,null)
+            val label :TextView = view.findViewById(R.id.tv_titulo_spinner)
+            label.setText("Consultando el producto en la Base de Datos")
+            builder.setView(view)
+            alertDialog = builder.create()
+            alertDialog.setCancelable(false)
+            alertDialog.show()
+
             Log.i("tag",holder.fila?.tag.toString())
             FirebaseFirestore.getInstance().collection("productos").document(holder.fila?.tag.toString()).get()
                 .addOnSuccessListener {
-                    val producto:Producto = Producto(
-                        it.get("uid") as String,
-                        it.get("nombre") as String,
-                        it.get("tipo") as String,
-                        it.get("stock") as String,
-                        it.get("precio") as String,
-                    )
+                    val producto:Producto = Producto()
+
+                    producto.uid = it.get("uid") as String
+                    producto.nombre = it.get("nombre") as String
+                    producto.tipo = it.get("tipo") as String
+                    producto.stock = it.get("stock") as String
+                    producto.precio = it.get("precio") as String
                     if(it.get("filename") !=null){
                         producto.filename = it.get("filename") as String
                     }
                     if(it.get("foto")!=null){
                         producto.foto = it.get("foto") as String
                     }
+                    alertDialog.dismiss()
                     val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
                     val fragmentTransaction:FragmentTransaction = fragmentManager.beginTransaction()
                     val clienteDetalle = FragmentProductoDetalle(context_)

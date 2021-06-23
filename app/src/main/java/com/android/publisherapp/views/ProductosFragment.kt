@@ -115,8 +115,8 @@ class ProductosFragment : Fragment() {
 
                 nom = txtNombreProducto?.text.toString().trim()
                 tipo = txtTipoProducto?.text.toString().trim()
-                precio = txtStockProducto?.text.toString().trim()
-                stock = txtPrecioProducto?.text.toString().trim()
+                precio = txtPrecioProducto?.text.toString().trim()
+                stock = txtStockProducto?.text.toString().trim()
 
                 if(nom.isNullOrEmpty() || tipo.isNullOrEmpty() || precio.isNullOrEmpty() || stock.isNullOrEmpty()){
                     showAlert("ALERTA","Los campos son requeridos, no deben estar vacios")

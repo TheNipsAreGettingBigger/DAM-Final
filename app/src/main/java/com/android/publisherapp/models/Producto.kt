@@ -5,7 +5,7 @@ import com.google.firebase.firestore.PropertyName
 
 //data class Producto(val nombre: String, val tipo: String,val foto:String,val stock:String)
 data class Producto(
-    @Exclude val uid: String = "",
+    @Exclude var uid: String = "",
     @PropertyName("nombre") var nombre: String = "",
     @PropertyName("tipo") var tipo: String = "",
     @PropertyName("foto") var foto: String="",
