@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -31,25 +32,32 @@ class ProductoAdapter(options: FirestoreRecyclerOptions<Producto>,context:Contex
         holder.tv_tipo?.setText(model.tipo)
         holder.tv_precio?.setText("${model.precio} soles")
         holder.fila?.tag = model.uid
-        if(!model.foto.isNullOrEmpty()){
+        if(model.foto.trim().isNotEmpty()){
             Glide.with(holder.iv_producto?.context!!).load(model.foto).into(holder.iv_producto!!)
+        }else{
+            holder.iv_producto?.setImageResource(R.drawable.tele)
         }
 
         holder.fila?.setOnClickListener{
-            Log.i("asd", "MyClass.getView() — get item number $model")
-            Toast.makeText(context_, "${holder.fila?.tag.toString()} aasdas", Toast.LENGTH_SHORT).show()
+            Log.i("tag",holder.fila?.tag.toString())
             FirebaseFirestore.getInstance().collection("productos").document(holder.fila?.tag.toString()).get()
                 .addOnSuccessListener {
-                    var producto:Producto = Producto(
+                    val producto:Producto = Producto(
                         it.get("uid") as String,
                         it.get("nombre") as String,
                         it.get("tipo") as String,
-                        it.get("foto") as String,
                         it.get("stock") as String,
-                        it.get("precio") as String)
+                        it.get("precio") as String,
+                    )
+                    if(it.get("filename") !=null){
+                        producto.filename = it.get("filename") as String
+                    }
+                    if(it.get("foto")!=null){
+                        producto.foto = it.get("foto") as String
+                    }
                     val fragmentManager:FragmentManager = (context_ as AppCompatActivity).getSupportFragmentManager()
                     val fragmentTransaction:FragmentTransaction = fragmentManager.beginTransaction()
-                    val clienteDetalle:FragmentProductoDetalle = FragmentProductoDetalle()
+                    val clienteDetalle = FragmentProductoDetalle(context_)
                     clienteDetalle.producto = producto
                     fragmentTransaction.replace(R.id.frgPrincipal,clienteDetalle)
                     fragmentTransaction.commit()

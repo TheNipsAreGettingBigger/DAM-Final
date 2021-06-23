@@ -59,14 +59,17 @@ class ProductosFragment : Fragment() {
             // mostrar imagen y guardar la url
             ivAddImagen?.setImageURI(uri)
             val filename =  context?.let { RealPathUtil.getRealPath(it, uri) } ?: ""
-            imageUri = uri
-            val fullName = filename.substringAfterLast("/")
-            val fileName = fullName.substringBeforeLast(".")
-            val extension = fullName.substringAfterLast(".")
-            lblAddImage?.textSize = 15F
-            lblAddImage?.gravity = TextView.TEXT_ALIGNMENT_TEXT_START
-            nameImage = "${fileName}.${extension}"
-            lblAddImage?.text = nameImage
+            if(filename.trim().isNotEmpty()){
+                imageUri = uri
+                val fullName = filename.substringAfterLast("/")
+                val fileName = fullName.substringBeforeLast(".")
+                val extension = fullName.substringAfterLast(".")
+                lblAddImage?.textSize = 15F
+                lblAddImage?.gravity = TextView.TEXT_ALIGNMENT_TEXT_START
+                nameImage = "${fileName}.${extension}"
+                lblAddImage?.text = nameImage
+            }
+
         }
     }
 
@@ -125,7 +128,12 @@ class ProductosFragment : Fragment() {
                     progressDialog = progressDialogBuilder?.create()
                     progressDialog?.setCancelable(false)
                     progressDialog?.show()
-                    upload()
+                    if(nameImage.trim().isNotEmpty()){
+                        upload()
+                    }else{
+                        insertProduct()
+                    }
+
                 }
 
             }
@@ -173,7 +181,8 @@ class ProductosFragment : Fragment() {
             "tipo" to tipo,
             "precio" to precio,
             "stock" to stock,
-            "foto" to urlImage
+            "foto" to urlImage,
+            "filename" to nameImage
         ))
             .addOnSuccessListener {
 

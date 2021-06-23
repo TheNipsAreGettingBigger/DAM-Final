@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnEliminarActualizar"
         android:layout_width="wrap_content"
         android:padding="5dp"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnEditarActualizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -46,11 +46,11 @@
         android:padding="5dp"
         android:textColor="@color/secondaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
-        app:layout_constraintStart_toEndOf="@+id/button" />
+        app:layout_constraintEnd_toStartOf="@+id/btnCancelarActualizar"
+        app:layout_constraintStart_toEndOf="@+id/btnEliminarActualizar" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnCancelarActualizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="40dp"
@@ -66,7 +66,7 @@
         android:layout_height="451dp"
         android:layout_marginBottom="15dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/btnEditarActualizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <com.google.android.material.textfield.TextInputLayout
@@ -74,7 +74,7 @@
             app:endIconMode="clear_text"
             android:layout_marginTop="10dp"
 
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="3dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -84,19 +84,20 @@
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:boxCornerRadiusBottomStart="10dp"
-            android:hint="Nombre">
+
+            android:hint="Nombre del producto">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_nom_actualizar"
                 android:layout_width="match_parent"
-                android:inputType="text"
                 android:layout_height="wrap_content"
-                />
+                android:inputType="textNoSuggestions|text" />
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tipo"
             app:endIconMode="clear_text"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="3dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -106,41 +107,20 @@
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:boxCornerRadiusBottomStart="10dp"
-            android:hint="Tipo">
+            android:hint="Tipo de producto">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_tipo_actua"
                 android:layout_width="match_parent"
-                android:inputType="text"
                 android:layout_height="wrap_content"
-                />
+                android:inputType="textNoSuggestions|text" />
 
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/marca"
-            app:endIconMode="clear_text"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxCornerRadiusBottomEnd="10dp"
-            app:boxCornerRadiusTopEnd="10dp"
-            app:boxCornerRadiusTopStart="10dp"
-            app:boxCornerRadiusBottomStart="10dp"
-            android:hint="marca">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:inputType="text"
-                android:layout_height="wrap_content"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/precio"
             app:endIconMode="clear_text"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="3dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -150,19 +130,21 @@
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:boxCornerRadiusBottomStart="10dp"
-            android:hint="Precio">
+
+            android:hint="Precio del producto">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_precio_actu"
                 android:layout_width="match_parent"
-                android:inputType="numberDecimal"
+
                 android:layout_height="wrap_content"
-                />
+                android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/stock"
             app:endIconMode="clear_text"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -172,13 +154,13 @@
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:boxCornerRadiusBottomStart="10dp"
-            android:hint="Stock">
+            android:hint="Stock del producto">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_stock_actua"
                 android:layout_width="match_parent"
-                android:inputType="number"
                 android:layout_height="wrap_content"
-                />
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -191,8 +173,8 @@
 
             <ImageView
                 android:id="@+id/iv_actualizarProducto"
-                android:layout_width="112dp"
-                android:layout_height="77dp"
+                android:layout_width="132dp"
+                android:layout_height="100dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_baseline_add_photo_alternate_24"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -200,11 +182,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:layout_width="158dp"
-                android:layout_height="48dp"
+                android:id="@+id/lbl_filename"
+                android:layout_width="153dp"
+                android:layout_height="93dp"
                 android:layout_marginEnd="48dp"
-                android:text="[Actualizar Imagen]"
                 android:gravity="center"
+                android:text="[Actualizar Imagen]"
                 android:textAlignment="center"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
