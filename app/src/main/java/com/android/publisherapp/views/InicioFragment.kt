@@ -113,8 +113,6 @@ class InicioFragment : Fragment(), OnChartValueSelectedListener {
 
     }
     override fun onValueSelected(e: Entry?, h: Highlight?) {
-
-//        Log.i("Entry selected", )
         barra!!.highlightValue(h)
         Toast.makeText(context,e!!.data.toString()+"",Toast.LENGTH_SHORT).show()
     }
