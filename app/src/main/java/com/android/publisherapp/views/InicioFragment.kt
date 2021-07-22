@@ -1,5 +1,6 @@
 package com.android.publisherapp.views
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -16,14 +18,20 @@ import com.android.publisherapp.models.Usuario
 import com.bumptech.glide.Glide
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.Legend.LegendForm
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class InicioFragment : Fragment() {
+class InicioFragment : Fragment(), OnChartValueSelectedListener {
     var container:ConstraintLayout ? = null
     var barra:BarChart? = null
 
@@ -86,22 +94,14 @@ class InicioFragment : Fragment() {
         description.textSize = 20f
         val barEntries = arrayListOf<BarEntry>()
 
-        Log.i("TEST",productos[0].uid)
         productos.forEachIndexed { index,producto->
-            barEntries.add(BarEntry((index + 1).toFloat(), producto.stock.toFloat()))
+            barEntries.add(BarEntry((index + 1).toFloat(), producto.stock.toFloat(),producto.nombre+" "+producto.tipo))
         }
-
-
-//        barEntries.add(BarEntry(2f, 15f))
-//        barEntries.add(BarEntry(3f, 5f))
-//        barEntries.add(BarEntry(4f, 2f))
-//        barEntries.add(BarEntry(5f, 10f))
-//        barEntries.add(BarEntry(7f, 7f))
-//        barEntries.add(BarEntry(9f, 9f))
-        val barDataSet = BarDataSet(barEntries, "Data set")
+        val barDataSet = BarDataSet(barEntries, "Stock de Productos")
         barDataSet.setColors(*ColorTemplate.MATERIAL_COLORS)
-//        barDataSet.setDrawValues(true)
+        barDataSet.setDrawValues(true)
         barDataSet.valueTextSize = 16f
+
         val data = BarData(barDataSet)
 
         barra!!.data = data
@@ -109,7 +109,19 @@ class InicioFragment : Fragment() {
         barra!!.invalidate()
         barra!!.animate()
         barra!!.animateY(2000)
+        barra!!.setOnChartValueSelectedListener(this)
+
+    }
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+
+//        Log.i("Entry selected", )
+        Toast.makeText(context,e!!.data.toString()+"",Toast.LENGTH_SHORT).show()
     }
 
+    override fun onNothingSelected() {
+    }
 
 }
+
+
+
