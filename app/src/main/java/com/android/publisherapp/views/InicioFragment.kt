@@ -1,6 +1,7 @@
 package com.android.publisherapp.views
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.android.publisherapp.R
+import com.android.publisherapp.models.Producto
 import com.android.publisherapp.models.Usuario
 import com.bumptech.glide.Glide
 import com.github.mikephil.charting.charts.BarChart
@@ -25,6 +27,8 @@ class InicioFragment : Fragment() {
     var container:ConstraintLayout ? = null
     var barra:BarChart? = null
 
+    var productos:ArrayList<Producto> = ArrayList();
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,9 +42,26 @@ class InicioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         container = view.findViewById(R.id.container_mi_info)
         barra = view.findViewById(R.id.graficoBarras)
-        crearGraficoBarra()
         val preferences = activity?.getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
         val email = preferences?.getString("email", "")
+
+        FirebaseFirestore.getInstance().collection("productos").get().addOnSuccessListener {
+                result ->
+            for (document in result) {
+                productos.add( Producto(
+                    document.id,
+                    document.data.get("nombre").toString(),
+                    document.data.get("tipo").toString(),
+                    document.data.get("foto").toString(),
+                    document.data.get("stock").toString(),
+                    document.data.get("precio").toString(),
+                    document.data.get("filename").toString()
+                ))
+            }
+            crearGraficoBarra()
+
+        }
+
         FirebaseFirestore.getInstance().collection("users").document(email.toString())
             .get().addOnSuccessListener {
                 var user = Usuario(it.get("nombre").toString(),it.get("edad").toString(),it.get("email").toString(),it.get("dni").toString())
@@ -61,24 +82,33 @@ class InicioFragment : Fragment() {
 
     private fun crearGraficoBarra() {
         val description = Description()
-        description.setText("Grafico de Barras")
-        description.setTextSize(13f)
-        barra!!.setFitBars(true)
+        description.text = "Grafico de Barras"
+        description.textSize = 20f
         val barEntries = arrayListOf<BarEntry>()
-        barEntries.add(BarEntry(1f, 10f))
-        barEntries.add(BarEntry(2f, 15f))
-        barEntries.add(BarEntry(3f, 5f))
-        barEntries.add(BarEntry(4f, 2f))
-        barEntries.add(BarEntry(4f, 2f))
-        barEntries.add(BarEntry(4f, 2f))
-        barEntries.add(BarEntry(4f, 2f))
+
+        Log.i("TEST",productos[0].uid)
+        productos.forEachIndexed { index,producto->
+            barEntries.add(BarEntry((index + 1).toFloat(), producto.stock.toFloat()))
+        }
+
+
+//        barEntries.add(BarEntry(2f, 15f))
+//        barEntries.add(BarEntry(3f, 5f))
+//        barEntries.add(BarEntry(4f, 2f))
+//        barEntries.add(BarEntry(5f, 10f))
+//        barEntries.add(BarEntry(7f, 7f))
+//        barEntries.add(BarEntry(9f, 9f))
         val barDataSet = BarDataSet(barEntries, "Data set")
         barDataSet.setColors(*ColorTemplate.MATERIAL_COLORS)
-        barDataSet.setDrawValues(true)
+//        barDataSet.setDrawValues(true)
+        barDataSet.valueTextSize = 16f
         val data = BarData(barDataSet)
+
         barra!!.data = data
+        barra!!.setFitBars(true)
         barra!!.invalidate()
         barra!!.animate()
+        barra!!.animateY(2000)
     }
 
 
