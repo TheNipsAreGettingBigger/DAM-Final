@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.publisherapp.R
@@ -17,8 +19,11 @@ import com.android.publisherapp.models.Producto
 import com.android.publisherapp.models.Usuario
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
 
 
 class UsuariosFragment : Fragment() {
@@ -54,11 +59,35 @@ class UsuariosFragment : Fragment() {
             dialog?.show()
 
 
-            var btnAdd =viewUsuario.findViewById<Button>(R.id.btnAddUsuarios)
+            var btnAdd =viewUsuario.findViewById<Button>(R.id.btnAgregarUsuario)
             var btnCancelar = viewUsuario.findViewById<Button>(R.id.btnCancelarUser)
 
             btnCancelar.setOnClickListener {
                 dialog?.dismiss()
+            }
+
+            btnAdd.setOnClickListener {
+                var email = viewUsuario.findViewById<EditText>(R.id.et_add_email)
+                var password = viewUsuario.findViewById<EditText>(R.id.et_add_password)
+                var nombre = viewUsuario.findViewById<EditText>(R.id.et_add_nombre)
+                var edad = viewUsuario.findViewById<EditText>(R.id.et_add_edad)
+                var dni = viewUsuario.findViewById<EditText>(R.id.et_add_dni)
+                Log.i("email",email.text.toString())
+                Log.i("password",password.text.toString())
+                Firebase.auth.createUserWithEmailAndPassword(email.text.toString(),password.text.toString())
+                    .addOnSuccessListener {
+                        FirebaseFirestore.getInstance().collection("users").document(email.text.toString())
+                            .set(hashMapOf(
+                                "nombre" to nombre.text.toString(),
+                                "email" to email.text.toString(),
+                                "edad" to edad.text.toString(),
+                                "dni" to dni.text.toString(),
+                                "rol" to "trabajador",
+                                "foto" to ""
+                            )).addOnSuccessListener {
+                                dialog?.dismiss()
+                            }
+                    }
             }
         }
 
