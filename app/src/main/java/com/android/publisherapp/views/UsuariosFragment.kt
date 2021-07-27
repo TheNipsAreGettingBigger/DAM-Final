@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.publisherapp.R
@@ -50,6 +51,11 @@ class UsuariosFragment : Fragment() {
         var btnAddUsuario:FloatingActionButton = view.findViewById(R.id.btnAddUsuarios)
 
         btnAddUsuario.setOnClickListener {
+            val preferences = activity?.getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
+            val email = preferences?.getString("email", "")
+            if(email != "thom@gmail.com"){
+                return@setOnClickListener;
+            }
             Log.i("TEST","click +")
             dialogBuilder = AlertDialog.Builder(context)
             var viewUsuario:View = layoutInflater.inflate(R.layout.usuarios_add,null)

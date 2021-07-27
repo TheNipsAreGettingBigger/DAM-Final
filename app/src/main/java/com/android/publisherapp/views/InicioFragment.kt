@@ -81,7 +81,9 @@ class InicioFragment : Fragment(), OnChartValueSelectedListener {
 
     fun drawUser(user:Usuario){
         val imagen = container?.findViewById<ImageView>(R.id.iv_usuario)
-        Glide.with(imagen?.context!!).load(user.foto).into(imagen!!)
+        if(!user.foto.trim().isEmpty()){
+            Glide.with(imagen?.context!!).load(user.foto).into(imagen!!)
+        }
         container?.findViewById<TextView>(R.id.txt_nombre)?.setText(user.nombre)
         container?.findViewById<TextView>(R.id.txt_dni)?.setText(user.dni)
         container?.findViewById<TextView>(R.id.txt_email)?.setText(user.email)
